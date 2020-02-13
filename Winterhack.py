@@ -4,9 +4,9 @@ import random as r
 #snowflake array
 snowflakes = []
 
-#movement speed
-dx = 0
-dy = 3
+#gravity in the y direction (pixels per frame)
+gy = 0.066
+wind = [7, -1]
 
 #dimensions for display surface object
 x = 1080
@@ -19,7 +19,7 @@ x1 = r.randint(0,980)
 picchooser = r.randint(0,3)
 
 #loop placeholder
-abc = 1
+abc = False
 
 #bg colour
 black = [0, 0, 0]
@@ -42,21 +42,45 @@ display_surface.fill(black)
 
 for i in range(1000):
     picchooser = r.randint(1,2)
-    snowflakes.append([r.randint(0, 1080), r.randint(0,720), picchooser])
+    yspeed = r.randint(1, 5)
+    snowflakes.append([r.randint(0, 1580), r.randint(0, 720), picchooser, 0, yspeed, yspeed])
 
 #perpetual loop
-while (abc == 1):
+while (not abc):
+
+    #kill switch
+    for event in pygame.event.get():
+        if (event.type == pygame.QUIT):
+            abc == True
+            pygame.quit()
 
     #clear background for next snowflake
     display_surface.fill(black)
 
-    #determines which image to use
+    #loops through array of snowflakes
     for q in snowflakes:
-        q[1] += dy
+        #adds more and more speed each frame (rudimentary gravity)
+        q[4] += gy
+        #moves snowflake 
+        q[1] += (q[4] - wind[1])
+        #wind on x axis
+        q[0] += -wind[0]
+        q[1] = 720
+        #picks snowflake image and spawns snowflakes
         if (q[2] == 1):
-            display_surface.blit(snowflake1_c, (q[0], q[1]))
+            display_surface.blit(pygame.transform.rotate(snowflake1_c, 1), (q[0], q[1]))
         elif (q[2] == 1):
-            display_surface.blit(snowflake2_c, (q[0], q[1]))
+            display_surface.blit(pygame.transform.rotate(snowflake2_c, 1), (q[0], q[1]))
+            
+
+        #checks if snowflake is offscreen
+        if (q[1] > 720 or q[0] < 0):
+            #resets y
+            q[1] = r.randint(-180, 0)
+            #resets x
+            q[0] = r.randint(0, 1580)
+            #resets speed
+            q[4] = q[5]
 
     #updates
     pygame.display.update()
