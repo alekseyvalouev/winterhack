@@ -40,6 +40,7 @@ snowflake1_c = pygame.transform.scale(snowflake1, (7, 7))
 #make bg black
 display_surface.fill(black)
 
+#makes each individual snowflake
 for i in range(1000):
     picchooser = r.randint(1,2)
     yspeed = r.randint(1, 5)
@@ -65,7 +66,6 @@ while (not abc):
         q[1] += (q[4] - wind[1])
         #wind on x axis
         q[0] += -wind[0]
-        q[1] = 720
         #picks snowflake image and spawns snowflakes
         if (q[2] == 1):
             display_surface.blit(pygame.transform.rotate(snowflake1_c, 1), (q[0], q[1]))
